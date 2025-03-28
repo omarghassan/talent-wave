@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone')->nullable();
-            $table->enum('role', ['employee', 'admin', 'hr']);
             $table->decimal('salary', 10, 2)->nullable();
             $table->foreignId('department_id')->nullable()->constrained()->onDelete('set null');
             $table->string('profile_picture')->nullable();
