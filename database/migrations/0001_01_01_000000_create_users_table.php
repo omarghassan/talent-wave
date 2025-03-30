@@ -16,10 +16,17 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('phone')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('phone')->nullable()->unique();
+            $table->rememberToken();
+            //$table->string('employee_id', 20)->nullable()->unique();
             $table->decimal('salary', 10, 2)->nullable();
+            $table->string('job_title')->nullable();
+            $table->date('hire_date')->nullable();
+            $table->text('address')->nullable();
             $table->foreignId('department_id')->nullable()->constrained()->onDelete('set null');
             $table->string('profile_picture')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
 

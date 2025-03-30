@@ -3,15 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
-
+    use HasFactory, Notifiable,SoftDeletes;
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +22,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'employee_id',
+        'department_id',
+        'job_title',
+        'hire_date',
+        'phone',
+        'address',
+        'profile_picture',
     ];
 
     /**
@@ -50,39 +58,24 @@ class User extends Authenticatable
         return $this->belongsTo(Department::class);
     }
 
+    public function leaves()
+    {
+        return $this->hasMany(Leave::class);
+    }
+
+    public function leaveBalances()
+    {
+        return $this->hasMany(LeaveBalance::class);
+    }
+
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
     }
 
-    public function vacations()
+    public function documents()
     {
-        return $this->hasMany(Vacation::class);
-    }
-
-    public function earlyLeaves()
-    {
-        return $this->hasMany(EarlyLeave::class);
-    }
-
-    public function salaryAdvances()
-    {
-        return $this->hasMany(SalaryAdvance::class);
-    }
-
-    public function receivedMessages()
-    {
-        return $this->hasMany(Message::class, 'receiver_id');
-    }
-
-    public function sentMessages()
-    {
-        return $this->hasMany(Message::class, 'sender_id');
-    }
-
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class);
+        return $this->hasMany(Document::class);
     }
 
 }
