@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attendance;
-use App\Http\Requests\StoreAttendanceRequest;
-use App\Http\Requests\UpdateAttendanceRequest;
+use App\Models\User;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class AttendanceController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $attendances = Attendance::all();
-        return view("public.pages.attendances.index", compact("attendances"));
+        //
     }
 
     /**
@@ -28,7 +29,7 @@ class AttendanceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAttendanceRequest $request)
+    public function store(StoreUserRequest $request)
     {
         //
     }
@@ -36,15 +37,16 @@ class AttendanceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Attendance $attendance)
+    public function show(User $user)
     {
-        //
+        $user = Auth::user();
+        return view('public.pages.profile', compact('user'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Attendance $attendance)
+    public function edit(User $user)
     {
         //
     }
@@ -52,7 +54,7 @@ class AttendanceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAttendanceRequest $request, Attendance $attendance)
+    public function update(UpdateUserRequest $request, User $user)
     {
         //
     }
@@ -60,7 +62,7 @@ class AttendanceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Attendance $attendance)
+    public function destroy(User $user)
     {
         //
     }

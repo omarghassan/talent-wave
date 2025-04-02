@@ -1,6 +1,4 @@
 @extends('layouts.public')
-
 @section('content')
-    <h1>Test</h1>
+<h1>Attendances</h1>
 @endsection
-

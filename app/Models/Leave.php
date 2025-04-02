@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Leave extends Model
 {
-    /** @use HasFactory<\Database\Factories\LeaveFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -40,5 +39,21 @@ class Leave extends Model
     public function approver()
     {
         return $this->belongsTo(Admin::class, 'approved_by');
+    }
+
+    /**
+     * Boot method to automatically calculate total_days before saving.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($leave) {
+            $leave->total_days = $leave->start_date->diffInDays($leave->end_date) + 1;
+        });
+
+        static::updating(function ($leave) {
+            $leave->total_days = $leave->start_date->diffInDays($leave->end_date) + 1;
+        });
     }
 }

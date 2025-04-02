@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Leave;
-use App\Http\Requests\StoreLeaveRequest;
-use App\Http\Requests\UpdateLeaveRequest;
+use App\Models\LeaveType;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class LeaveController extends Controller
 {
@@ -13,7 +14,8 @@ class LeaveController extends Controller
      */
     public function index()
     {
-        //
+        $leaves = Leave::where('user_id', Auth::id())->get();
+        return view("public.pages.leaves.index", compact("leaves"));
     }
 
     /**
@@ -21,15 +23,31 @@ class LeaveController extends Controller
      */
     public function create()
     {
-        //
+        $leaveTypes = LeaveType::all();
+        return view("public.pages.leaves.create", compact('leaveTypes'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreLeaveRequest $request)
+    public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'leave_type_id' => 'required|exists:leave_types,id',
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'reason' => 'nullable|string|max:500',
+        ]);
+
+        // Add the authenticated user's ID to the validated data
+        $validated['user_id'] = Auth::id();
+        // Set default status
+        $validated['status'] = 'pending';
+
+        $leave = Leave::create($validated);
+
+        return redirect()->route('leaves.index')
+            ->with('success', 'Leave request submitted successfully.');
     }
 
     /**
@@ -37,7 +55,12 @@ class LeaveController extends Controller
      */
     public function show(Leave $leave)
     {
-        //
+        // Ensure users can only view their own leave requests
+        // if ($leave->user_id !== Auth::id()) {
+        //     abort(403, 'Unauthorized action.');
+        // }
+        $leaveType = LeaveType::all();
+        return view("public.pages.leaves.show", compact('leave', 'leaveType'));
     }
 
     /**
@@ -45,15 +68,48 @@ class LeaveController extends Controller
      */
     public function edit(Leave $leave)
     {
-        //
+        // Ensure users can only edit their own leave requests
+        // if ($leave->user_id !== Auth::id()) {
+        //     abort(403, 'Unauthorized action.');
+        // }
+
+        // Only allow editing if status is pending
+        if ($leave->status !== 'pending') {
+            return redirect()->route('leaves.index')
+                ->with('error', 'You cannot edit a leave request that has already been processed.');
+        }
+
+        $leaveTypes = LeaveType::all();
+        return view("public.pages.leaves.edit", compact('leave', 'leaveTypes'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateLeaveRequest $request, Leave $leave)
+    public function update(Request $request, Leave $leave)
     {
-        //
+        // Ensure users can only update their own leave requests
+        // if ($leave->user_id !== Auth::id()) {
+        //     abort(403, 'Unauthorized action.');
+        // }
+
+        // Only allow updating if status is pending
+        if ($leave->status !== 'pending') {
+            return redirect()->route('leaves.index')
+                ->with('error', 'You cannot update a leave request that has already been processed.');
+        }
+
+        $validated = $request->validate([
+            'leave_type_id' => 'required|exists:leave_types,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'reason' => 'nullable|string|max:500',
+        ]);
+
+        $leave->update($validated);
+
+        return redirect()->route('leaves.index')
+            ->with('success', 'Leave request updated successfully.');
     }
 
     /**
@@ -61,6 +117,20 @@ class LeaveController extends Controller
      */
     public function destroy(Leave $leave)
     {
-        //
+        // Ensure users can only delete their own leave requests
+        // if ($leave->user_id !== Auth::id()) {
+        //     abort(403, 'Unauthorized action.');
+        // }
+
+        // Only allow deletion if status is pending
+        if ($leave->status !== 'pending') {
+            return redirect()->route('leaves.index')
+                ->with('error', 'You cannot cancel a leave request that has already been processed.');
+        }
+
+        $leave->delete();
+
+        return redirect()->route('leaves.index')
+            ->with('success', 'Leave request cancelled successfully.');
     }
 }
