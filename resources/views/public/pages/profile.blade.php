@@ -17,8 +17,8 @@
     }
 
     .profile-cover {
-        height: 200px;
-        background: linear-gradient(135deg, #FF8C00 0%, #FFA500 100%);
+        height: 45px;
+        background: linear-gradient(135deg, #343a40, #212529);;
         border-radius: 15px 15px 0 0;
         position: relative;
     }
@@ -283,33 +283,7 @@
             </div>
         </div>
     </div>
-
-    <!-- Action Buttons -->
-    <div class="row mt-4">
-        <div class="col-12 d-flex justify-content-end">
-            <button class="btn btn-black me-2">
-                <i class="bi bi-download me-1"></i> Download Profile
-            </button>
-            <button class="btn btn-orange">
-                <i class="bi bi-printer me-1"></i> Print Profile
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Logout Section -->
-<div class="container mt-4">
-    <div class="divider-black my-3"></div>
-    <div class="d-flex justify-content-end">
-        <form id="logout-form" action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="link-black">
-                <i class="bi bi-box-arrow-right me-1"></i>
-                <span>Log out</span>
-            </button>
-        </form>
-    </div>
-</div>
+    
 
 <!-- Bootstrap JS Bundle with Popper -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

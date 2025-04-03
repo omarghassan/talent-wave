@@ -7,75 +7,73 @@
             <div class="card my-4">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                     <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-                        <h1 class="text-white text-capitalize ps-3">Leave Details</h1>
+                        <h1 class="text-white text-capitalize ps-3">Edit Leave Request</h1>
                     </div>
                 </div>
                 <div class="card-body px-4 pb-2">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h5>Leave Type:</h5>
-                            <p>{{ $leave->leaveType->name }}</p>
+                    <form action="{{ route('leaves.update', $leave->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="input-group input-group-static mb-4">
+                                    <label for="leave_type_id">Leave Type</label>
+                                    <select class="form-control" id="leave_type_id" name="leave_type" required>
+                                        @foreach($leaveTypes as $type)
+                                            <option value="{{ $type->id }}" {{ $leave->leave_type_id == $type->id ? 'selected' : '' }}>
+                                                {{ $type->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('leave_type')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <h5>Status:</h5>
-                            <p>
-                                @if($leave->status == 'pending')
-                                    <span class="badge bg-warning">{{ $leave->status }}</span>
-                                @elseif($leave->status == 'approved')
-                                    <span class="badge bg-success">{{ $leave->status }}</span>
-                                @elseif($leave->status == 'rejected')
-                                    <span class="badge bg-danger">{{ $leave->status }}</span>
-                                @endif
-                            </p>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="input-group input-group-static mb-4">
+                                    <label for="start_date">Start Date</label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $leave->start_date }}" required>
+                                    @error('start_date')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="input-group input-group-static mb-4">
+                                    <label for="end_date">End Date</label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" value="{{ $leave->end_date }}" required>
+                                    @error('end_date')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h5>Start Date:</h5>
-                            <p>{{ $leave->start_date->format('d/m/Y') }}</p>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="input-group input-group-static mb-4">
+                                    <label for="reason">Reason</label>
+                                    <textarea class="form-control" id="reason" name="reason" rows="4">{{ $leave->reason }}</textarea>
+                                    @error('reason')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <h5>End Date:</h5>
-                            <p>{{ $leave->end_date->format('d/m/Y') }}</p>
+
+                        <div class="row mb-0">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-success">Update</button>
+                                <a href="{{ route('leaves.index') }}" class="btn btn-danger">Cancel</a>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h5>Total Days:</h5>
-                            <p>{{ $leave->total_days }}</p>
-                        </div>
-                        @if($leave->status == 'rejected' && !empty($leave->rejection_reason))
-                        <div class="col-md-6">
-                            <h5>Rejection Reason:</h5>
-                            <p>{{ $leave->rejection_reason }}</p>
-                        </div>
-                        @endif
-                    </div>
-                    
-                    @if(!empty($leave->reason))
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <h5>Reason:</h5>
-                            <p>{{ $leave->reason }}</p>
-                        </div>
-                    </div>
-                    @endif
-                    
-                    <div class="row mb-0">
-                        <div class="col-md-12">
-                            <a href="{{ route('leaves.index') }}" class="btn btn-secondary">Back to List</a>
-                            @if($leave->status == 'pending')
-                                <a href="{{ route('leaves.edit', $leave->id) }}" class="btn btn-warning">Edit</a>
-                                <form action="{{ route('leaves.destroy', $leave->id) }}" method="POST" style="display: inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this leave request?')">Cancel Request</button>
-                                </form>
-                            @endif
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

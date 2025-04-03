@@ -15,7 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        return view('public.pages.profile', compact('user'));
     }
 
     /**
@@ -39,8 +40,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user = Auth::user();
-        return view('public.pages.profile', compact('user'));
+        //
     }
 
     /**

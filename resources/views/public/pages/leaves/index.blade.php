@@ -34,8 +34,12 @@
                   <td>{{ $leave->total_days }}</td>
                   <td>{{ $leave->status }}</td>
                   <td>
-                    <a href="{{ route('leaves.show', $leave->id) }}" class="btn btn-success">Show Details</a>
-                    <a href="{{ route('leaves.edit', $leave->id) }}" class="btn btn-warning">Edit</a>
+                    <div class="btn-group" role="group">
+                      <a href="{{ route('leaves.show', $leave->id) }}" class="btn btn-success btn-sm">View</a>
+                      @if($leave->status == 'Pending')
+                      <a href="{{ route('leaves.edit', $leave->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                      @endif
+                    </div>
                   </td>
                 </tr>
                 @endforeach

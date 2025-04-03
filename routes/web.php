@@ -22,4 +22,9 @@ Route::prefix('employee')->middleware('user')->group(function () {
     Route::resource('profile', UserController::class);
     Route::resource('leaves', LeaveController::class);
     Route::resource('attendances', AttendanceController::class);
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.check-in');
+    Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.check-out');
 });
+
+Route::get('/leaves/{id}/edit', [LeaveController::class, 'edit'])->name('leaves.edit');
+Route::put('/leaves/{leave}', [LeaveController::class, 'update'])->name('leaves.update');

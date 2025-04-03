@@ -42,7 +42,7 @@ class LeaveController extends Controller
         // Add the authenticated user's ID to the validated data
         $validated['user_id'] = Auth::id();
         // Set default status
-        $validated['status'] = 'pending';
+        $validated['status'] = 'Pending';
 
         $leave = Leave::create($validated);
 
@@ -53,63 +53,109 @@ class LeaveController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Leave $leave)
+    // public function show(Leave $leave)
+    // {
+    //     // Ensure users can only view their own leave requests
+    //     // if ($leave->user_id !== Auth::id()) {
+    //     //     abort(403, 'Unauthorized action.');
+    //     // }
+    //     $leaveType = LeaveType::all();
+    //     return view("public.pages.leaves.show", compact('leave', 'leaveType'));
+    // }
+
+    public function show($id)
     {
-        // Ensure users can only view their own leave requests
-        // if ($leave->user_id !== Auth::id()) {
-        //     abort(403, 'Unauthorized action.');
-        // }
-        $leaveType = LeaveType::all();
-        return view("public.pages.leaves.show", compact('leave', 'leaveType'));
+        $leave = Leave::with('leavetype')->findOrFail($id);
+        return view('public.pages.leaves.show', compact('leave'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Leave $leave)
-    {
-        // Ensure users can only edit their own leave requests
-        // if ($leave->user_id !== Auth::id()) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+    // public function edit(Leave $leave)
+    // {
+    //     // Ensure users can only edit their own leave requests
+    //     // if ($leave->user_id !== Auth::id()) {
+    //     //     abort(403, 'Unauthorized action.');
+    //     // }
 
-        // Only allow editing if status is pending
-        if ($leave->status !== 'pending') {
-            return redirect()->route('leaves.index')
-                ->with('error', 'You cannot edit a leave request that has already been processed.');
+    //     // Only allow editing if status is pending
+    //     if ($leave->status !== 'Pending') {
+    //         return redirect()->route('leaves.index')
+    //             ->with('error', 'You cannot edit a leave request that has already been processed.');
+    //     }
+
+    //     $leaveTypes = LeaveType::all();
+    //     return view("public.pages.leaves.edit", compact('leave', 'leaveTypes'));
+    // }
+
+    public function edit($id)
+    {
+        $leaveTypes = LeaveType::all();
+        $leave = Leave::find($id);
+        if (!$leave) {
+            return redirect()->route('leaves.index')->with('error', 'Leave request not found.');
         }
 
-        $leaveTypes = LeaveType::all();
+
         return view("public.pages.leaves.edit", compact('leave', 'leaveTypes'));
     }
 
     /**
      * Update the specified resource in storage.
      */
+    // public function update(Request $request, Leave $leave)
+    // {
+    //     // Ensure users can only update their own leave requests
+    //     // if ($leave->user_id !== Auth::id()) {
+    //     //     abort(403, 'Unauthorized action.');
+    //     // }
+
+    //     // Only allow updating if status is pending
+    //     if ($leave->status !== 'Pending') {
+    //         return redirect()->route('leaves.index')
+    //             ->with('error', 'You cannot update a leave request that has already been processed.');
+    //     }
+
+    //     $validated = $request->validate([
+    //         'leave_type_id' => 'required|exists:leave_types,id',
+    //         'start_date' => 'required|date',
+    //         'end_date' => 'required|date|after_or_equal:start_date',
+    //         'reason' => 'nullable|string|max:500',
+    //     ]);
+
+    //     $leave->update($validated);
+
+    //     return redirect()->route('leaves.index')
+    //         ->with('success', 'Leave request updated successfully.');
+    // }
+
     public function update(Request $request, Leave $leave)
     {
-        // Ensure users can only update their own leave requests
-        // if ($leave->user_id !== Auth::id()) {
-        //     abort(403, 'Unauthorized action.');
-        // }
-
-        // Only allow updating if status is pending
-        if ($leave->status !== 'pending') {
-            return redirect()->route('leaves.index')
-                ->with('error', 'You cannot update a leave request that has already been processed.');
+        if ($leave->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
         }
 
-        $validated = $request->validate([
-            'leave_type_id' => 'required|exists:leave_types,id',
+        if ($leave->status !== 'Pending') {
+            return redirect()->route('leaves.index')
+                ->with('error', 'You cannot edit a leave request that has already been processed.');
+        }
+
+        $validatedData = $request->validate([
+            'leave_type' => 'required|exists:leave_types,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'reason' => 'nullable|string|max:500',
+            'reason' => 'nullable|string',
         ]);
 
-        $leave->update($validated);
+        $leave->update([
+            'leave_type_id' => $validatedData['leave_type'],
+            'start_date' => $validatedData['start_date'],
+            'end_date' => $validatedData['end_date'],
+            'reason' => $validatedData['reason'],
+        ]);
 
-        return redirect()->route('leaves.index')
-            ->with('success', 'Leave request updated successfully.');
+        return redirect()->route('leaves.index')->with('success', 'Leave request updated successfully.');
     }
 
     /**
@@ -123,7 +169,7 @@ class LeaveController extends Controller
         // }
 
         // Only allow deletion if status is pending
-        if ($leave->status !== 'pending') {
+        if ($leave->status !== 'Pending') {
             return redirect()->route('leaves.index')
                 ->with('error', 'You cannot cancel a leave request that has already been processed.');
         }

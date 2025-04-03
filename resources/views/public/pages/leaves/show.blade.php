@@ -19,11 +19,11 @@
                         <div class="col-md-6">
                             <h5>Status:</h5>
                             <p>
-                                @if($leave->status == 'pending')
+                                @if($leave->status == 'Pending')
                                     <span class="badge bg-warning">{{ $leave->status }}</span>
-                                @elseif($leave->status == 'approved')
+                                @elseif($leave->status == 'Approved')
                                     <span class="badge bg-success">{{ $leave->status }}</span>
-                                @elseif($leave->status == 'rejected')
+                                @elseif($leave->status == 'Rejected')
                                     <span class="badge bg-danger">{{ $leave->status }}</span>
                                 @endif
                             </p>
@@ -65,14 +65,9 @@
                     
                     <div class="row mb-0">
                         <div class="col-md-12">
-                            <a href="{{ route('leaves.index') }}" class="btn btn-secondary">Back to List</a>
-                            @if($leave->status == 'pending')
+                            <a href="{{ route('leaves.index') }}" class="btn btn-success">Back to List</a>
+                            @if($leave->status == 'Pending')
                                 <a href="{{ route('leaves.edit', $leave->id) }}" class="btn btn-warning">Edit</a>
-                                <form action="{{ route('leaves.destroy', $leave->id) }}" method="POST" style="display: inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this leave request?')">Cancel Request</button>
-                                </form>
                             @endif
                         </div>
                     </div>
