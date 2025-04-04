@@ -1,0 +1,30 @@
+.ccard-header {
+    background-color: #212529;
+    color: white;
+}
+
+.info-section {
+    margin-bottom: 1.5rem;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.info-value {
+    font-size: 1.1rem;
+}
+
+.user-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+#a {
+    color: white !important;
+}

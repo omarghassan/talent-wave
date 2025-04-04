@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,SoftDeletes;
-    
+    use HasFactory, Notifiable, SoftDeletes;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -29,6 +31,7 @@ class User extends Authenticatable
         'phone',
         'address',
         'profile_picture',
+        'salary',
     ];
 
     /**
@@ -78,4 +81,62 @@ class User extends Authenticatable
         return $this->hasMany(Document::class);
     }
 
+    protected static function booted()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+
+
+
+            $leaveTypes = LeaveType::all();
+            foreach ($leaveTypes as $leaveType) {
+                LeaveBalance::create([
+                    'user_id' => $user->id,
+                    'leave_type_id' => $leaveType->id,
+                    'year' => Carbon::now()->year,
+                    'allocated' => $leaveType->default_balance,
+                    'used' => 0,
+                    'remaining' => $leaveType->default_balance,
+                ]);
+            }
+        });
+
+
+
+        static::deleting(function ($user) {
+            // When soft deleting a user (just leave attendances as-is)
+            if (!$user->isForceDeleting()) {
+                return;
+            }
+
+            // When force deleting a user, delete all attendances
+            $user->attendances()->delete();
+        });
+
+        static::deleting(function ($user) {
+            // When soft deleting a user (just leave attendances as-is)
+            if (!$user->isForceDeleting()) {
+                return;
+            }
+
+            // When force deleting a user, delete all attendances
+            $user->leave_balance()->delete();
+        });
+
+        static::deleting(function ($user) {
+            // When soft deleting a user (just leave attendances as-is)
+            if (!$user->isForceDeleting()) {
+                return;
+            }
+
+            // When force deleting a user, delete all attendances
+            $user->leaves()->delete();
+        });
+
+        static::restoring(function ($user) {
+            // No need to restore attendances since they weren't deleted
+            // during soft deletion
+        });
+    }
 }
