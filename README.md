@@ -1,66 +1,127 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Talent Wave - Employee Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Talent Wave is a comprehensive employee management system built with Laravel that streamlines HR processes and enhances workplace efficiency.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### User Management
+- Employee registration and profile management
+- Admin/HR user administration
+- Secure authentication and authorization
+- Soft delete functionality for data integrity
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Department Management
+- Create and manage organizational departments
+- Assign employees to specific departments
+- Department-based reporting
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Attendance System
+- Employee check-in/check-out functionality
+- Real-time attendance tracking
+- Attendance reports and analytics
+- Admin oversight of attendance records
 
-## Learning Laravel
+### Leave Management
+- Multiple leave types (annual, sick, personal, etc.)
+- Leave request submission and approval workflow
+- Leave balance tracking and management
+- Automated balance calculations
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Document Management
+- Secure document upload and storage
+- Document type categorization
+- Approval workflow for submitted documents
+- Document viewing and downloading
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Ticket System
+- Support ticket creation and tracking
+- Request processing with approval/rejection workflow
+- Ticket status monitoring
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Reporting
+- Comprehensive PDF report generation
+- Employee data exports
+- Attendance and leave summaries
+- Customizable report formats
 
-## Laravel Sponsors
+## Technology Stack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Backend**: Laravel 12
+- **Frontend**: Blade templates, JavaScript
+- **Database**: MySQL
+- **PDF Generation**: DomPDF
+- **Authentication**: Laravel's built-in auth system
 
-### Premium Partners
+## Installation
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/talent-wave.git
+   cd talent-wave
+   ```
 
-## Contributing
+2. Install PHP dependencies:
+   ```
+   composer install
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. Install JavaScript dependencies:
+   ```
+   npm install
+   ```
 
-## Code of Conduct
+4. Set up environment variables:
+   ```
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5. Configure your database in the `.env` file:
+   ```
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=talent_wave
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-## Security Vulnerabilities
+6. Run migrations and seed the database:
+   ```
+   php artisan migrate --seed
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+7. Start the development server:
+   ```
+   php artisan serve
+   ```
 
-## License
+8. For asset compilation:
+   ```
+   npm run dev
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Usage
+
+### Employee Portal
+- Access the employee dashboard at `/employee/dashboard`
+- Submit leave requests
+- Upload documents
+- View attendance records
+- Create support tickets
+
+### Admin Portal
+- Access the admin dashboard at `/admin/dashboard`
+- Manage employees and departments
+- Process leave requests and document approvals
+- Generate reports
+- Handle support tickets
+
+## Security
+
+The application implements multiple layers of security:
+- Role-based access control
+- Authentication middleware
+- Form validation
+- CSRF protection
+- Data sanitization
