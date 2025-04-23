@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Models\Department;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Hash;
 class AdminUserController extends Controller
 {
     /**
@@ -84,19 +84,42 @@ class AdminUserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
+        $user = User::findOrFail($id);
+
+        // First validate the old password
+        if (!Hash::check($request->old_password, $user->password)) {
+            return back()->withErrors(['old_password' => 'The old password is incorrect']);
+        }
+
+        // Validate the rest of the form data
         $validated = $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $id . ',id',
-            'password' => 'required | confirmed | min:8 | max: 33',
-            'phone' => 'required | unique:users,phone,' . $id . ',id',
+            'email' => 'required|unique:users,email,' . $id,
+            'phone' => 'required|unique:users,phone,' . $id,
             'salary' => 'required',
+            'department_id' => 'required',
+            'job_title' => 'required',
+            'hire_date' => 'required',
             'profile_picture' => 'nullable',
-            'department_id' => 'required'
+            'address' => 'nullable'
         ]);
-        User::findOrFail($id)->update($validated);
-        return redirect('/admin/adminusers/users')->with('message', ' user edited successfully');
+
+        // Check if a new password is being set
+        if ($request->filled('password')) {
+            $request->validate([
+                'password' => 'confirmed|min:8|max:33',
+            ]);
+            $validated['password'] = Hash::make($request->password);
+        } else {
+            // Keep the old password
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return redirect('/admin/adminusers/users')->with('message', 'User updated successfully');
     }
 
     /**

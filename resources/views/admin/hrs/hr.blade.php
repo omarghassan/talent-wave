@@ -9,7 +9,6 @@
   <div class="row">
     <div class="col-12">
       <div class="d-flex align-items-center justify-content-between mb-4">
-        <a class="btn bg-gradient-dark" href="{{ route('hr.create') }}" type="button">Add new HR</a>
       </div>
       <div class="card my-4">
         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
@@ -18,6 +17,9 @@
           </div>
         </div>
         <div class="card-body px-0 pb-2">
+          <div class="px-3">
+            <a class="btn bg-gradient-dark" href="{{ route('hr.create') }}" type="button">Add new HR</a>
+          </div>
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
               <thead>

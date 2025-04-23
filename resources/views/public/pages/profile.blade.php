@@ -10,15 +10,16 @@
     .profile-header {
         background-color: #fff;
         border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         position: relative;
         margin-bottom: 1.5rem;
         border: 1px solid #e0e0e0;
+        overflow: hidden;
     }
 
     .profile-cover {
-        height: 45px;
-        background: linear-gradient(135deg, #343a40, #212529);;
+        height: 90px;
+        background: linear-gradient(135deg, #FF5722 , #ffffff);
         border-radius: 15px 15px 0 0;
         position: relative;
     }
@@ -49,8 +50,8 @@
         top: 20px;
         right: 20px;
         z-index: 10;
-        background-color: #FF8C00;
-        border-color: #FF8C00;
+        background-color: #FF5722;
+        border-color: #FF5722;
         color: white;
         font-weight: 600;
     }
@@ -78,7 +79,13 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         padding: 25px;
         height: 100%;
-        border: 1px solid #e0e0e0;
+        border-left: 4px solid #FF5722;
+        transition: all 0.3s ease;
+    }
+
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
     .profile-section-title {
@@ -88,16 +95,22 @@
         padding-bottom: 10px;
         border-bottom: 2px solid #000;
         color: #000;
+        display: flex;
+        align-items: center;
     }
 
     .info-label {
         font-weight: 600;
         color: #000;
+        margin-bottom: 0.25rem;
     }
 
     .info-value {
         font-weight: 500;
         color: #333;
+        padding-left: 8px;
+        border-left: 3px solid #FF5722;
+        margin-bottom: 0.25rem;
     }
 
     .status-badge {
@@ -109,9 +122,9 @@
     }
 
     .department-badge {
-        background-color: rgba(255, 140, 0, 0.1);
-        color: #FF8C00;
-        border: 1px solid #FF8C00;
+        background-color: rgba(255, 87, 34, 0.1);
+        color: #FF5722;
+        border: 1px solid #FF5722;
     }
 
     .position-badge {
@@ -122,46 +135,43 @@
 
     .edit-field {
         cursor: pointer;
-        color: #FF8C00;
+        color: #FF5722;
         transition: color 0.2s;
         font-weight: 600;
     }
 
     .edit-field:hover {
-        color: #E67300;
+        color: #D84315;
         text-decoration: underline;
     }
-
 
     .btn-black {
         background-color: #000;
         color: white;
         border-color: #000;
         font-weight: 600;
+        transition: all 0.3s ease;
     }
 
     .btn-black:hover {
         background-color: #333;
         border-color: #333;
         color: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-
 
     .navbar-dark {
         background-color: #000 !important;
     }
 
-
     .shadow-black {
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-
 
     .divider-black {
         border-top: 1px solid #000;
         opacity: 0.1;
     }
-
 
     .link-black {
         color: #000;
@@ -169,8 +179,44 @@
     }
 
     .link-black:hover {
-        color: #FF8C00;
+        color: #FF5722;
         text-decoration: none;
+    }
+    
+    .row.g-4 {
+        --bs-gutter-x: 1.5rem;
+        --bs-gutter-y: 1.5rem;
+        margin-right: calc(var(--bs-gutter-x) * -.5);
+        margin-left: calc(var(--bs-gutter-x) * -.5);
+    }
+    
+    .row.g-4 > * {
+        padding-right: calc(var(--bs-gutter-x) * .5);
+        padding-left: calc(var(--bs-gutter-x) * .5);
+        margin-top: var(--bs-gutter-y);
+    }
+    
+    .icon-orange {
+        color: #FF5722;
+        margin-right: 0.5rem;
+    }
+    
+    .employee-name {
+        color: #000;
+        font-weight: 700;
+        font-size: 1.75rem;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
+    }
+    
+    .job-title {
+        color: #666;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .row.mb-3 {
+        margin-bottom: 1rem !important;
     }
 </style>
 
@@ -178,20 +224,16 @@
 
     <!-- Profile Header -->
     <div class="profile-header shadow-black">
-        <div class="profile-cover">
-
-        </div>
+        <div class="profile-cover"></div>
         <div class="profile-picture-container">
             <img src="{{ $user->profile_picture ? asset($user->profile_picture) : '/api/placeholder/160/160' }}"
-                alt="Employee Profile Picture"
+                alt=""
                 class="profile-picture">
-
-
         </div>
 
         <div class="profile-info">
-            <h2 class="mb-0" style="color: #000;">{{ $user->name }}</h2>
-            <p class="text-muted">{{ $user->job_title }}</p>
+            <h2 class="employee-name">{{ $user->name }}</h2>
+            <p class="job-title">{{ $user->job_title }}</p>
             <div class="d-flex mt-2">
                 <span class="status-badge department-badge me-2">{{ $user->department->name }}</span>
                 <span class="status-badge position-badge">Full-time</span>
@@ -205,7 +247,7 @@
         <div class="col-lg-6">
             <div class="profile-card">
                 <h3 class="profile-section-title">
-                    <i class="bi bi-person-fill me-2" style="color: #FF8C00;"></i>Personal Information
+                    <i class="bi bi-person-fill icon-orange"></i>Personal Information
                 </h3>
                 <div class="row mb-3">
                     <div class="col-sm-4">
@@ -246,7 +288,7 @@
         <div class="col-lg-6">
             <div class="profile-card">
                 <h3 class="profile-section-title">
-                    <i class="bi bi-briefcase-fill me-2" style="color: #FF8C00;"></i>Employment Information
+                    <i class="bi bi-briefcase-fill icon-orange"></i>Employment Information
                 </h3>
                 <div class="row mb-3">
                     <div class="col-sm-4">
@@ -274,7 +316,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
-                        <p class="info-label">Salary</p>
+                        <p class="info-label">Salary :</p>
                     </div>
                     <div class="col-sm-8">
                         <p class="info-value">{{ $user->salary }}</p>
@@ -283,10 +325,9 @@
             </div>
         </div>
     </div>
-    
+</div>
 
 <!-- Bootstrap JS Bundle with Popper -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
 
 @endsection

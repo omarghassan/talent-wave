@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -61,16 +61,36 @@ class AdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
+        $admin = Admin::findOrFail($id);
+
+        // First validate the old password
+        if (!Hash::check($request->old_password, $admin->password)) {
+            return back()->withErrors(['old_password' => 'The old password is incorrect']);
+        }
+
+        // Validate the rest of the form data
         $validated = $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:admins,email,' . $id . ',id',
-            'password' => 'required | confirmed | min:8 | max: 33',
-            'profile_picture' => 'required'
+            'email' => 'required|unique:admins,email,' . $id,
+            'profile_picture' => 'nullable'
         ]);
-        Admin::findOrFail($id)->update($validated);
-        return redirect('/admin/hrs/hr')->with('message', 'New HR edited successfully');
+
+        // Check if a new password is being set
+        if ($request->filled('password')) {
+            $request->validate([
+                'password' => 'confirmed|min:8|max:30',
+            ]);
+            $validated['password'] = Hash::make($request->password);
+        } else {
+            // Keep the old password
+            unset($validated['password']);
+        }
+
+        $admin->update($validated);
+
+        return redirect('/admin/hrs/hr')->with('message', 'HR updated successfully');
     }
 
     /**
@@ -99,7 +119,7 @@ class AdminController extends Controller
             "email" => "required|email",
             "password" => "required|min:6",
         ]);
-        
+
         if(Auth::guard('admin')->attempt($validated)){
             $request->session()->regenerate();
             return Redirect("/admin/adminusers/users");

@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use App\Models\Department;
 use App\Models\user;
 use App\Models\Document;
 use App\Models\DocumentType;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
@@ -22,6 +21,9 @@ class DocumentController extends Controller
 
         $documents = Document::when($filter, function ($query) use ($filter) {
             return $query->where('status', $filter);
+        })->whereHas('user', function ($query) {
+
+            $query->whereNull('deleted_at');
         })->get();
 
         return view('admin.document.index', compact('documents'));
@@ -81,9 +83,19 @@ class DocumentController extends Controller
     {
         $document = Document::findOrFail($id);
 
+        // Check if the file exists in the storage path
+        if (Storage::disk('public')->exists($document->file_path)) {
+            // Get the full path
+            $path = Storage::disk('public')->path($document->file_path);
 
+            // Get original filename or use the title with proper extension
+            $filename = $document->title . '.' . pathinfo($document->file_path, PATHINFO_EXTENSION);
 
+            // Return the file as a download
+            return response()->download($path, $filename);
+        }
 
+        // Check alternative path as a fallback
         $alternativePath = public_path('storage/' . $document->file_path);
         if (file_exists($alternativePath)) {
             $filename = $document->title . '.' . pathinfo($document->file_path, PATHINFO_EXTENSION);
@@ -96,12 +108,20 @@ class DocumentController extends Controller
     public function view($id)
     {
         $document = Document::findOrFail($id);
-        $filePath = 'storage/' . $document->file_path;
 
-        // Check if file exists
-        if (file_exists(public_path($filePath))) {
-            // Return a URL that points directly to the file
-            return redirect(asset($filePath));
+        // Check if file exists in storage
+        if (Storage::disk('public')->exists($document->file_path)) {
+            // Get the full path to the file
+            $fullPath = Storage::disk('public')->path($document->file_path);
+
+            // Get the MIME type of the file
+            $mimeType = Storage::disk('public')->mimeType($document->file_path);
+
+            // Create a response with appropriate headers
+            return response()->file($fullPath, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . basename($fullPath) . '"'
+            ]);
         }
 
         return back()->with('error', 'File not found.');

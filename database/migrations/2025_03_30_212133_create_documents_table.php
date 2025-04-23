@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('document_type_id')->constrained()->restrictOnDelete();
             $table->string('title');
             $table->string('file_path');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', [ 'approved', 'pending', 'rejected'])->default('pending');
             $table->date('expiry_date')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();

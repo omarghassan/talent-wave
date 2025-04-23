@@ -14,7 +14,7 @@ class LeaveController extends Controller
      */
     public function index()
     {
-        $leaves = Leave::where('user_id', Auth::id())->orderBy('start_date', 'desc')->get();
+        $leaves = Leave::where('user_id', Auth::id())->orderBy('created_at', 'asc')->get();
         return view("public.pages.leaves.index", compact("leaves"));
     }
 

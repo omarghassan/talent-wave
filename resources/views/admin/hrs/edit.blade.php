@@ -21,12 +21,11 @@
     <div class="row">
         <div class="col-md-10 p-4">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 id="a" class="mb-0">Edit HR</h5>
-                    <button class="btn btn-link text-white p-0">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
-                </div>
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+              <h1 class="text-white text-capitalize ps-3">Edit HR Info</h1>
+            </div>
+            </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('hr.update' ,['id' => $hr->id]) }}">
                         @csrf
@@ -38,6 +37,15 @@
                             <div class="col-md-6 mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input name="email" type="email" class="form-control" id="email" value="{{ $hr->email }}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="old_password">Current Password</label>
+                            <input type="password" name="old_password" id="old_password" class="form-control border border-secondary" required>
+                            @error('old_password')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                             </div>
                         </div>
                         <div class="row">
@@ -58,8 +66,8 @@
                         </div>
                         </div>
                         <div class="d-flex justify-content-end mb-2 me-2">
-                            <button type="button" class="btn btn-secondary me-2">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-danger me-2">Cancel</button>
+                            <button type="submit" class="btn btn-success">Save Changes</button>
                         </div>
                     </form>
                     @if ($errors->any())

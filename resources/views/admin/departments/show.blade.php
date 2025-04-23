@@ -12,7 +12,7 @@
         <div class="card my-4">
           <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
             <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-              <h6 class="text-white text-capitalize ps-3"> {{ $department->name }} Department</h6>
+              <h1 class="text-white text-capitalize ps-3"> {{ $department->name }} Department</h1>
             </div>
           </div>
           <div class="card-body px-0 pb-2">
@@ -65,13 +65,13 @@
                     </td>
                     <td class="align-middle text-center">
                         <div class="d-flex justify-content-center gap-2">
-                            <a href="{{ route('admin.edit_user', ['id' => $user->id]) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                          <a href="{{ route('admin.show_user', ['id' => $user->id]) }}" class="btn btn-sm btn-success">Show</a>
+                            <a href="{{ route('admin.edit_user', ['id' => $user->id]) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form method="POST" action="{{ route('admin.user_softdelete', ['id' => $user->id]) }}" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                             </form>
-                            <a href="{{ route('admin.show_user', ['id' => $user->id]) }}" class="btn btn-sm btn-outline-info">Show</a>
                         </div>
                     </td>
                   </tr>

@@ -45,7 +45,7 @@
             <input type="text" name="description" class="form-control">
           </div>
           <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100 m-0">Add</button>
+            <button type="submit" class="btn btn-success w-100 m-0">Add</button>
           </div>
         </div>
       </form>
@@ -57,7 +57,7 @@
             <div class="card my-4">  
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                     <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-                        <h6 class="text-white text-capitalize ps-3">Leave Types</h6>
+                        <h1 class="text-white text-capitalize ps-3">Leave Types</h1>
                     </div>
                 </div>
                 <div class="card-body px-0 pb-2">
@@ -84,7 +84,7 @@
                                         <p class="text-xs font-weight-bold mb-0">{{ $leaveType->default_balance }}</p>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" 
+                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" 
                                                 data-bs-target="#editModal{{ $leaveType->id }}">
                                             Edit
                                         </button>
@@ -116,8 +116,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn btn-primary">Update</button>
+                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-warning">Update</button>
                                                         </div>
                                                     </form>
                                                 </div>

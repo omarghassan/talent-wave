@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-between gap-2">
-          <a href="{{ route('leaves.download.pdf') }}" class="btn btn-primary">
+          <a href="{{ route('leaves.download.pdf') }}" class="btn btn-success">
             <i class="fas fa-file-pdf"></i> Export to PDF
           </a>
 
@@ -45,7 +45,7 @@
       <div class="card my-4">
         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
           <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-            <h6 class="text-white text-capitalize ps-3">employees table</h6>
+            <h1 class="text-white text-capitalize ps-3">employees table</h1>
           </div>
         </div>
         <div class="card-body px-0 pb-2">

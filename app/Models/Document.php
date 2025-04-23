@@ -25,7 +25,7 @@ class Document extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function documentType()
+    public function document_type()
     {
         return $this->belongsTo(DocumentType::class);
     }

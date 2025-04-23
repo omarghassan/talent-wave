@@ -19,7 +19,7 @@
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Name</th>
+                  <th class="text-uppercase text-secondary text-xs text-center font-weight-bolder opacity-7">Name</th>
                   <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">Description</th>
                   <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Create Date</th>
                   <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Edit Date</th>
@@ -30,15 +30,15 @@
                 @foreach ($departments as $department)
                 <tr>
                   <td>
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-sm">{{$department->name}}</h6>
+                    <div class="d-flex flex-column justify-content-center align-middle text-center">
+                      <h6 class="text-xs font-weight-bold mb-0">{{$department->name}}</h6>
                     </div>
 
                   </td>
                   <td>
                     <p class="text-xs font-weight-bold mb-0">{{$department->description}}</p>
                   </td>
-                  <td class="align-middle text-center">
+                  <td class="align-middle text-center ">
                     <p class="text-xs font-weight-bold mb-0">{{$department->created_at->diffForHumans()}}</p>
                   </td>
                   <td class="align-middle text-center">
@@ -46,14 +46,14 @@
                   </td>
                   <td class="align-middle text-center">
                     <div class="d-flex justify-content-center gap-2">
+                      <form method="POST" action="{{ route('department.restore', ['id' => $department->id]) }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-success">Restore</button>
+                      </form>
                       <form method="POST" action="{{ route('department.delete', ['id' => $department->id]) }}" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                      </form>
-                      <form method="POST" action="{{ route('department.restore', ['id' => $department->id]) }}" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-outline-success">Restore</button>
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                       </form>
                     </div>
                   </td>

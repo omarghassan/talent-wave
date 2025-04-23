@@ -2,7 +2,7 @@
 
 /*!
  * Bootstrap  v5.3.3 (https://getbootstrap.com/)
- * Copyright 2011-2024 The Bootstrap Authors
+ * Copyright 2011-2024 The Bootstrap employees
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 :root,
@@ -11427,7 +11427,7 @@ fieldset:disabled .btn {
 }
 
 .bg-gray-200 {
-  background-color: #e5e5e5 !important;
+  background-color: #f5f5f5 !important; 
 }
 
 .bg-gray-300 {
@@ -29149,5 +29149,76 @@ pre[class*=language-] {
     overflow: auto !important;
   }
 }
+.card-header {
+  background-color: #000;
+  color: white;
+}
+#employeesSearchContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+#employeesFilterGroup {
+  display: flex;
+  gap: 12px;
+}
+
+.employeesForm {
+  margin: 0;
+  padding: 0;
+}
+
+#employeesSearchWrapper {
+  display: flex;
+  width: 250px;
+}
+
+#employeesSearchInput {
+  flex-grow: 1;
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid #e0e0e0;
+  border-radius: 3px 0 0 3px;
+  background-color: white;
+  outline: none;
+}
+
+#employeesSearchButton {
+  padding: 6px 10px;
+  border: 1px solid #e0e0e0;
+  border-left: none;
+  border-radius: 0 3px 3px 0;
+  background-color: white;
+  cursor: pointer;
+}
+
+#employeesSearchButton svg {
+  width: 14px;
+  height: 14px;
+  fill: #777;
+}
+
+#employeesDepartmentFilter {
+  height: 40px;
+  width: 170px;
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  background-color: white;
+  outline: none;
+  color: #333;
+}
+
+#employeesAddButton {
+  padding: 6px 12px;
+  font-size: 13px;
+  background-color: #333;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 3px;
+  cursor: pointer;}
 
 /*# sourceMappingURL=dashboard-free.css.map */

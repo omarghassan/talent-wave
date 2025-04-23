@@ -21,6 +21,7 @@ return new class extends Migration
             $table->enum('status', ['present', 'absent', 'late', 'half_day', 'on_leave'])->default('present');
             $table->text('notes')->nullable();
             $table->decimal('overtime_hours', 5, 2)->nullable();
+            $table->decimal('shortage_hours', 5, 2)->nullable();
             $table->timestamps();
         });
     }

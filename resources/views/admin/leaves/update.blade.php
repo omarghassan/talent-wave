@@ -19,12 +19,14 @@
 </style>
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    <h5 id="a" class="mb-0">Employee Leave Balances ({{ $year }})</h5>
-                </div>
-                <div class="card-body">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+              <h1 class="text-white text-capitalize ps-3">Employee Leave Balance </h1>
+            </div>
+            </div>
+                <div class="card-body text-center">
                     @if (session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
@@ -63,7 +65,17 @@
                                 <label class="form-label">Allocated Days</label>
                                 <input type="number" name="allocated" class="form-control" step="0.01" min="0" required>
                             </div>
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary w-100">Update</button>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-12 text-center">
+                                <button type="submit" class="btn btn-warning px-4">Update</button>
                             </div>
-                            @endsection
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

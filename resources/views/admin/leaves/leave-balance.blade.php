@@ -26,7 +26,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-between gap-2">
-          <a href="{{ route('leave.pdf') }}" class="btn btn-primary">
+          <a href="{{ route('leave.pdf') }}" class="btn btn-success">
             <i class="fas fa-file-pdf"></i> Export to PDF
           </a>
 
@@ -79,7 +79,7 @@
                   </td>
                   <td class="align-middle text-center">
 
-                    <a class="btn btn-primary btn-sm" href="{{ route('balance.update' ,['id' => $leave->id]) }}">Update</a>
+                    <a class="btn btn-warning btn-sm" href="{{ route('balance.update' ,['id' => $leave->id]) }}">Update</a>
                   </td>
                 </tr>
                 @endforeach

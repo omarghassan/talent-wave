@@ -134,7 +134,7 @@
         <p data-aos="fade-up" data-aos-delay="200">Track employees, attendance, and leave requests effortlessly</p>
         <div class="d-flex mt-4" data-aos="fade-up" data-aos-delay="300">
           <a href="#about" class="btn-get-started">Get Started</a>
-          <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
+          <!-- <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Watch Video</span></a> -->
         </div>
       </div>
 
@@ -168,7 +168,7 @@
 
               <div class="position-relative mt-4">
                 <img src="{{ asset('assets/img/about-2.jpg') }}" class="img-fluid rounded-4" alt="">
-                <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox pulsating-play-btn"></a>
+                <!-- <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox pulsating-play-btn"></a> -->
               </div>
             </div>
           </div>
@@ -265,7 +265,7 @@
               </div>
               <div class="card-body text-center">
                 <h5 class="card-title mb-1">Yousef Al-nadi</h5>
-                <p class="card-text text-muted">scrum master</p>
+                <p class="card-text text-muted">Scrum Master</p>
                 <div class="mt-3">
                   <a href="https://www.facebook.com/omar.g.abudiak" class="btn btn-sm btn-outline-primary rounded-circle mx-1"><i class="bi bi-facebook"></i></a>
                   <a href="https://www.instagram.com/yousef.al_nadi?igsh=ZXd6enR1cmJ4ODFn" class="btn btn-sm btn-outline-primary rounded-circle mx-1"><i class="bi bi-instagram"></i></a>
@@ -281,7 +281,7 @@
     </section><!-- /Team Section -->
 
     <!-- About Section -->
-    <section id="plan" class="plan section">
+    <!-- <section id="plan" class="plan section">
 
       <div class="container">
         <div class="container section-title" data-aos="fade-up">
@@ -337,7 +337,8 @@
 
       </div>
 
-    </section><!-- /About Section -->
+    </section> -->
+    <!-- /About Section -->
 
     <!-- Contact Section -->
     <section id="contact" class="contact section">
@@ -381,56 +382,70 @@
             </div>
           </div>
 
-          <div class="col-lg-6">
-            <form action="/contact" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="500">
+          <div class="col-lg-6" id="contactForm">
+            @if(session('success'))
+            <div class="alert alert-success">
+              {{ session('success') }}
+            </div>
+            @endif
+
+            @if ($errors->any())
+            <div class="alert alert-danger">
+              <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+            @endif
+
+            <form action="" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="500">
               @csrf
               <div class="row gy-4">
                 <div class="col-md-6">
-                  <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                  <input type="text" name="name" class="form-control" id="uname" placeholder="Your Name" required value="">
                 </div>
 
                 <div class="col-md-6">
-                  <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                  <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required value="">
                 </div>
 
-                <div class="col-md-12">
-                  <select name="plan" class="form-select light-pink-select">
-                    <option value="" selected disabled>Select your pricing plan</option>
-                    <option value="basic">Basic Plan - $19.99</option>
-                    <option value="pro">Pro Plan - $39.99</option>
-                    <option value="enterprise">Enterprise Plan - $59.99</option>
+                <!-- <div class="col-md-12">
+                  <select name="plan" class="form-select light-pink-select" id="plan" required>
+                    <option disabled selected>Select your plan</option>
+                    <option value="basic">Basic Plan</option>
+                    <option value="pro">Pro Plan</option>
+                    <option value="enterprise">Enterprise Plan</option>
                   </select>
+                </div> -->
+
+                <div class="col-md-12">
+                  <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required value="">
                 </div>
 
                 <div class="col-md-12">
-                  <input type="text" class="form-control" name="subject" placeholder="Subject" required>
-                </div>
-
-                <div class="col-md-12">
-                  <textarea class="form-control" name="message" rows="4" placeholder="Message" required></textarea>
+                  <textarea class="form-control" id="message" name="message" rows="4" placeholder="Message" required></textarea>
                 </div>
 
                 <div class="col-md-12 text-center">
-                  @if(session('success'))
-                  <div class="alert alert-success">{{ session('success') }}</div>
-                  @endif
-                  @if($errors->any())
-                  <div class="alert alert-danger">
-                    <ul>
-                      @foreach ($errors->all() as $error)
-                      <li>{{ $error }}</li>
-                      @endforeach
-                    </ul>
-                  </div>
-                  @endif
-                  <button type="submit" class="btn btn-primary">Send Message</button>
+                  <div class="loading" id="loading">Loading</div>
+
+                  <button type="submit" class="btn btn-primary" id="">Send Message</button>
+                  <div id="feedback" class="mt-3"></div>
+
                 </div>
               </div>
             </form>
           </div>
+
           <!-- End Contact Form -->
 
         </div>
+
+      </div>
+      <!-- End Contact Form -->
+
+      </div>
 
       </div>
 
@@ -499,6 +514,10 @@
 
   <!-- Main JS File -->
   <script src="{{ asset('assets/js/main.js') }}"></script>
+
+  <script src="{{asset('assets/js/contact.js')}}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 </body>
 

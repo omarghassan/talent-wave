@@ -91,8 +91,8 @@
               </select>
             </div>
             <div class="d-flex justify-content-end mb-2 me-2">
-              <button type="button" class="btn btn-secondary me-2 border border-secondary">Cancel</button>
-              <button type="submit" class="btn btn-primary border border-primary">Save Changes</button>
+              <button type="button" class="btn btn-danger me-2 border border-secondary">Cancel</button>
+              <button type="submit" class="btn btn-success border border-primary">Save Changes</button>
             </div>
           </form>
           @if ($errors->any())

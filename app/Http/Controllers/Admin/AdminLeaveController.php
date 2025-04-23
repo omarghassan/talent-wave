@@ -8,6 +8,10 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Leave;
 use App\Models\LeaveBalance;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Attendance;
+use DateTime;
+use DateInterval;
+use DatePeriod;
 
 class AdminLeaveController extends Controller
 {
@@ -33,14 +37,15 @@ class AdminLeaveController extends Controller
         return view('admin.leaves.index', compact("leaves"));
     }
 
+
     public function approve(Leave $leave)
     {
-        // Update leave status
+
         $leave->status = 'approved';
-        $leave->approved_by = Auth::id(); // Assuming admin is logged in
+        $leave->approved_by = Auth::id();
         $leave->save();
 
-        // Update leave balance
+
         $year = date('Y', strtotime($leave->start_date));
         $leaveBalance = LeaveBalance::where('user_id', $leave->user_id)
             ->where('leave_type_id', $leave->leave_type_id)
@@ -53,6 +58,39 @@ class AdminLeaveController extends Controller
             $leaveBalance->save();
         }
 
+
+        $startDate = new \DateTime($leave->start_date);
+        $endDate = new \DateTime($leave->end_date);
+        $interval = new \DateInterval('P1D');
+        $dateRange = new \DatePeriod($startDate, $interval, $endDate->modify('+1 day'));
+
+        foreach ($dateRange as $date) {
+            $dateStr = $date->format('Y-m-d');
+
+
+            $existingRecord = Attendance::where('user_id', $leave->user_id)
+                ->whereDate('date', $dateStr)
+                ->first();
+
+            if (!$existingRecord) {
+
+                Attendance::create([
+                    'user_id' => $leave->user_id,
+                    'date' => $dateStr,
+                    'status' => 'on_leave',
+                    'time_in' => null,
+                    'time_out' => null,
+                    'remarks' => 'On approved leave'
+                ]);
+            } else {
+
+                $existingRecord->update([
+                    'status' => 'on_leave',
+                    'remarks' => 'On approved leave'
+                ]);
+            }
+        }
+
         return redirect()->back()->with('success', 'Leave request approved');
     }
 
@@ -63,7 +101,7 @@ class AdminLeaveController extends Controller
         ]);
 
         $leave->status = 'rejected';
-        $leave->approved_by = Auth::id(); // Assuming admin is logged in
+        $leave->approved_by = Auth::id();
         $leave->rejection_reason = $request->rejection_reason;
         $leave->save();
 
@@ -72,16 +110,16 @@ class AdminLeaveController extends Controller
 
     public function downloadPdf(Request $request)
     {
-        // Get leaves with proper eager loading
+
         $leaves = Leave::with(['user', 'leaveType'])
             ->whereHas('user', function ($query) {
                 $query->whereNull('deleted_at');
             })
             ->get();
 
-        // Create a PDF specific view (not using the same view as your web page)
+
         $pdf = PDF::loadView('admin.leaves.leavepdf', compact('leaves'))
-            ->setPaper('A4', 'landscape'); // Landscape orientation
+            ->setPaper('A4', 'landscape');
 
         return $pdf->download('leaves-report-' . now()->format('Y-m-d') . '.pdf');
     }

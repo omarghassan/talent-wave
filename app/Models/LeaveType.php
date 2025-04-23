@@ -21,7 +21,7 @@ class LeaveType extends Model
         return $this->hasMany(Leave::class);
     }
 
-    public function leaveBalances()
+    public function leave_balances()
     {
         return $this->hasMany(LeaveBalance::class);
     }

@@ -32,7 +32,7 @@
         </div>
         <hr class="dark horizontal my-0">
         <div class="card-footer p-2 ps-3">
-          <p class="mb-0">{{ $stats['absentToday'] }}</p>
+          <p class="mb-0">{{ $absentEmployees->count() }}</p>
         </div>
       </div>
     </div>
@@ -51,7 +51,7 @@
         </div>
         <hr class="dark horizontal my-0">
         <div class="card-footer p-2 ps-3">
-          <p class="mb-0 ">{{ $stats['presentToday'] }}</p>
+          <p class="mb-0 ">{{ $presentEmployees->count() }}</p>
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@
         </div>
         <hr class="dark horizontal my-0">
         <div class="card-footer p-2 ps-3">
-          <p class="mb-0">{{ $stats['onLeaveToday'] }}</p>
+          <p class="mb-0">{{ $onLeaveEmployees->count() }}</p>
         </div>
       </div>
     </div>
@@ -89,7 +89,7 @@
         </div>
         <hr class="dark horizontal my-0">
         <div class="card-footer p-2 ps-3">
-          <p class="mb-0 text-sm">{{ $stats['lateToday'] }}</p>
+          <p class="mb-0 text-sm">{{ $lateEmployees->count() }}</p>
         </div>
       </div>
     </div>
@@ -152,7 +152,7 @@
       <div class="card my-4">
         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
           <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-            <h6 class="text-white text-capitalize ps-3">Attendance Records</h6>
+            <h1 class="text-white text-capitalize ps-3">Attendance Records</h1>
           </div>
         </div>
         <div class="card-body px-0 pb-2">
@@ -166,6 +166,7 @@
                   <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Check Out</th>
                   <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Total Hours</th>
                   <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Overtime</th>
+                  <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Shortage</th>
                   <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">Status</th>
                 </tr>
               </thead>
@@ -196,6 +197,9 @@
                   </td>
                   <td class="align-middle text-center">
                     <p class="text-xs font-weight-bold mb-0">{{ $attendance->overtime_hours ?? '-' }}</p>
+                  </td>
+                  <td class="align-middle text-center">
+                    <p class="text-xs font-weight-bold mb-0">{{ $attendance->shortage_hours ?? '-' }}</p>
                   </td>
                   <td class="align-middle text-center">
                     <span class="badge

@@ -16,6 +16,7 @@ class AttendanceController extends Controller
      */
     public function index(Request $request)
     {
+        $today = today();
         $stats = [
             'totalEmployees' => User::whereNull('deleted_at')->count(),
             'presentToday' => Attendance::whereDate('date', today())
@@ -35,12 +36,43 @@ class AttendanceController extends Controller
                 ->whereHas('user', fn($q) => $q->whereNull('deleted_at'))
                 ->count(),
         ];
-        $query = Attendance::with(['user' => function ($query) {
 
+        // Get lists of employees for each status
+        $presentEmployees = Attendance::with('user')
+            ->whereDate('date', today())
+            ->where('status', 'present')
+            ->whereHas('user', fn($q) => $q->whereNull('deleted_at'))
+            ->get();
+
+        $absentEmployees = User::whereNull('deleted_at')
+            ->whereDoesntHave('attendances', function ($q) {
+                $q->whereDate('date', today());
+            })
+            ->get();
+
+        $lateEmployees = Attendance::with('user')
+            ->whereDate('date', today())
+            ->where('status', 'late')
+            ->whereHas('user', fn($q) => $q->whereNull('deleted_at'))
+            ->get();
+
+        $onLeaveEmployees = User::whereNull('deleted_at')
+            ->whereHas('leaves', function ($query) use ($today) {
+                $query->where('status', 'Approved')
+                    ->where('start_date', '<=', $today)
+                    ->where('end_date', '>=', $today);
+            })
+            ->with(['leaves' => function ($query) use ($today) {
+                $query->where('status', 'Approved')
+                    ->where('start_date', '<=', $today)
+                    ->where('end_date', '>=', $today);
+            }])
+            ->get();
+
+        $query = Attendance::with(['user' => function ($query) {
             $query->whereNull('deleted_at');
         }])
             ->whereHas('user', function ($query) {
-
                 $query->whereNull('deleted_at');
             })
             ->orderBy('date', 'desc')
@@ -57,7 +89,6 @@ class AttendanceController extends Controller
 
         if ($request->filled('user_search')) {
             $searchTerm = $request->user_search;
-
             $query->whereHas('user', function ($q) use ($searchTerm) {
                 $q->where('name', 'like', "%{$searchTerm}%")
                     ->orWhere('id', 'like', "%{$searchTerm}%");
@@ -70,16 +101,18 @@ class AttendanceController extends Controller
 
         $attendances = $query->paginate(25);
 
-
         return view('admin.attendance.index', [
             'attendances' => $attendances,
             'users' => User::all(),
-            'presentCount' => $statusCounts['present'] ?? 0,
-            'absentCount' => $statusCounts['absent'] ?? 0,
-            'lateCount' => $statusCounts['late'] ?? 0,
-            'halfDayCount' => $statusCounts['half_day'] ?? 0,
-            'onLeaveCount' => $statusCounts['on_leave'] ?? 0,
-            'stats' => $stats
+            'presentCount' => $stats['presentToday'],
+            'absentCount' => $stats['absentToday'],
+            'lateCount' => $stats['lateToday'],
+            'onLeaveCount' => $stats['onLeaveToday'],
+            'stats' => $stats,
+            'presentEmployees' => $presentEmployees,
+            'absentEmployees' => $absentEmployees,
+            'lateEmployees' => $lateEmployees,
+            'onLeaveEmployees' => $onLeaveEmployees
         ]);
     }
 

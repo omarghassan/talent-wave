@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\DocumentController as UserDocumentController;
+use App\Http\Controllers\TicketController;
 
 // Admin Controllers
 use App\Http\Controllers\Admin\AdminController;
@@ -17,6 +19,10 @@ use App\Http\Controllers\Admin\AdminLeaveController;
 use App\Http\Controllers\Admin\LeaveBalanceController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\LeaveTypeController;
+use App\Http\Controllers\Admin\DocumentTypeController;
+use App\Http\Controllers\Admin\TicketController as AdminTicketController;
+
+
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\HRMiddleware;
 use App\Models\Attendance;
@@ -36,14 +42,23 @@ Route::prefix('employee')->middleware('user')->group(function () {
     })->name('dashboard');
 
     Route::resource('profile', UserController::class);
+
     Route::resource('leaves', LeaveController::class);
+    Route::get('/leaves/{id}/edit', [LeaveController::class, 'edit'])->name('leaves.edit');
+    Route::put('/leaves/{leave}', [LeaveController::class, 'update'])->name('leaves.update');
+
     Route::resource('attendances', AttendanceController::class);
     Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.check-in');
     Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.check-out');
+
+    Route::resource('docs', UserDocumentController::class);
+
+    Route::resource('tickets', TicketController::class);
 });
 
-Route::get('/leaves/{id}/edit', [LeaveController::class, 'edit'])->name('leaves.edit');
-Route::put('/leaves/{leave}', [LeaveController::class, 'update'])->name('leaves.update');
+// Route::get('/documents', [UserDocumentController::class, 'index'])->name('use.documents');
+// Route::get('/documents/create', [UserDocumentController::class, 'create'])->name('upload');
+// Route::post('/documents', [UserDocumentController::class, 'store'])->name('documents.store');
 
 // Admin Routes
 Route::middleware(['guest:admin'])->group(function () {
@@ -61,23 +76,31 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/hrs/deletedhr', [AdminController::class, 'show_deletedHR'])->name('hr.index_deleted');
     Route::post('/hrs/restore/{id}', [AdminController::class, 'restore'])->name('hr.restore');
     Route::delete('/hrs/create/{id}', [AdminController::class, 'destroy'])->name('hr.destroy');
-    Route::get('/hr/show/{id}', [AdminController::class, 'show'])->name('hr.show');
 });
 
 Route::prefix('admin')->middleware(['hr'])->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    });
+
+
     //////////////admin users
     Route::get('/adminusers/create', [AdminUserController::class, 'create'])->name('admin.create');
-    Route::get('/adminusers/users',[AdminUserController::class, 'index'])->name('all_users');
+    Route::get('/adminusers/users', [AdminUserController::class, 'index'])->name('all_users');
     Route::post('/adminusers/create', [AdminUserController::class, 'store'])->name('add_new_employee');
     Route::get('/adminusers/logout', [AdminController::class, 'logout'])->name('admin_logout');
-    Route::get('/adminusers/edit/{id}',[AdminUserController::class,'edit'])->name('admin.edit_user');
-    Route::put('/adminusers/edit/{id}',[AdminUserController::class,'update'])->name('admin.user_update');
-    Route::delete('/adminusers/softdelete/{id}',[AdminUserController::class,'destroy'])->name('admin.user_softdelete');
-    Route::get('/adminusers/deletedusers',[AdminUserController::class, 'show_deleted_users'])->name('deletedeusers.index');
-    Route::delete('/adminusers/delete/{id}',[AdminUserController::class,'delete_user'])->name('admin.delete_user');
+    Route::post('/admin/adminusers/logout', [AdminController::class, 'logout'])->name('admin_logout');
+    Route::get('/adminusers/edit/{id}', [AdminUserController::class, 'edit'])->name('admin.edit_user');
+    Route::put('/adminusers/edit/{id}', [AdminUserController::class, 'update'])->name('admin.user_update');
+    Route::delete('/adminusers/softdelete/{id}', [AdminUserController::class, 'destroy'])->name('admin.user_softdelete');
+    Route::get('/adminusers/deletedusers', [AdminUserController::class, 'show_deleted_users'])->name('deletedeusers.index');
+    Route::delete('/adminusers/delete/{id}', [AdminUserController::class, 'delete_user'])->name('admin.delete_user');
     Route::post('/adminusers/restore/{id}', [AdminUserController::class, 'restore'])->name('admin.restore_user');
     Route::get('/adminusers/show/{id}', [AdminUserController::class, 'show'])->name('admin.show_user');
     Route::get('/download-users-pdf', [AdminUserController::class, 'downloadPDF'])->name('employees.download.pdf');
+    Route::get('/hr/show/{id}', [AdminController::class, 'show'])->name('hr.show');
+    Route::get('/hr/show/{id}', [AdminController::class, 'show'])->name('hr.show');
     ///////////
 
     //////////admin department
@@ -93,7 +116,7 @@ Route::prefix('admin')->middleware(['hr'])->group(function () {
     ///////////////////
 
     //////////attendances
-    Route::get('/attendance', [AdminAttendanceController::class, 'index'])->name('attendances.index');
+    Route::get('/attendance', [AdminAttendanceController::class, 'index'])->name('admin.attendances');
     Route::get('/attendance/pdf', [AdminAttendanceController::class, 'downloadAttendancePdf'])->name('attendance.pdf');
     ///////////
 
@@ -121,4 +144,24 @@ Route::prefix('admin')->middleware(['hr'])->group(function () {
     Route::post('/leave-balances', [LeaveBalanceController::class, 'update'])->name('admin.leave-balances.update');
     Route::get('/employees', [LeaveBalanceController::class, 'downloadPdf'])->name('leave.pdf');
     /////////////////
+
+    //////////admin documents type
+    Route::get('/document-type', [DocumentTypeController::class, 'index'])->name('document_type.index');
+    Route::post('/document-type', [DocumentTypeController::class, 'store'])->name(name: 'create.documenttype');
+    Route::delete('/document-type/{id}', [DocumentTypeController::class, 'soft_delete'])->name('documettype.softdelete');
+    Route::delete('/document-type/delete/{id}', [DocumentTypeController::class, 'destroy'])->name('documenttype.delete');
+    Route::post('/document-type/restore/{id}', [DocumentTypeController::class, 'restore'])->name('documenttype.restore');
+    Route::get('/document-type/departments/{id}', [DocumentTypeController::class, 'edit'])->name('documenttype.department');
+
+    Route::put('/documenttype/{id}', [DocumentTypeController::class, 'update']);
+
+    Route::get('/document-type/{id}', [DocumentTypeController::class, 'show'])->name('documenttype.show');
+    ///////////////////
+
+    // Ticket routes for admins
+    Route::get('/tickets', [AdminTicketController::class, 'index'])->name('admin.tickets.index');
+    Route::get('/tickets/{ticket}', [AdminTicketController::class, 'show'])->name('admin.tickets.show');
+    Route::patch('/tickets/{ticket}/approve', [AdminTicketController::class, 'approve'])->name('admin.tickets.approve');
+    Route::patch('/tickets/{ticket}/reject', [AdminTicketController::class, 'reject'])->name('admin.tickets.reject');
+    Route::get('/tickets-pdf', [AdminTicketController::class, 'downloadPdf'])->name('admin.tickets.pdf');
 });

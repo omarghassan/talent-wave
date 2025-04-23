@@ -81,6 +81,12 @@ class User extends Authenticatable
         return $this->hasMany(Document::class);
     }
 
+    // Add relationship to tickets
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
     protected static function booted()
     {
         parent::boot();
@@ -101,8 +107,6 @@ class User extends Authenticatable
                 ]);
             }
         });
-
-
 
         static::deleting(function ($user) {
             // When soft deleting a user (just leave attendances as-is)

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Admin extends Authenticatable
 {
     use HasFactory, Notifiable, SoftDeletes;
-    protected $fillable = ['name', 'email', 'password','profile_picture'];
+    protected $fillable = ['name', 'email', 'password', 'profile_picture'];
 
     protected $hidden = ['password'];
 
@@ -30,5 +31,17 @@ class Admin extends Authenticatable
     public function reports()
     {
         return $this->hasMany(Report::class, 'created_by');
+    }
+
+    // Add relationship to approved tickets
+    public function approvedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'approved_by');
+    }
+
+    // Add relationship to rejected tickets
+    public function rejectedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'rejected_by');
     }
 }

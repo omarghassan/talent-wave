@@ -24,7 +24,7 @@ class LeaveBalance extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function leaveType()
+    public function leave_type()
     {
         return $this->belongsTo(LeaveType::class);
     }

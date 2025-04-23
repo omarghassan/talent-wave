@@ -10,10 +10,10 @@ class AttendanceObserver
     // In app/Observers/AttendanceObserver.php
     public function updated(Attendance $attendance)
     {
-        if ($attendance->isDirty(['check_in', 'check_out'])) {
-            $attendance->calculateTotalHours();
-            $attendance->calculateOvertime();
-        }
+        // if ($attendance->isDirty(['check_in', 'check_out'])) {
+        //     $attendance->calculateTotalHours();
+        //     $attendance->calculateOvertime();
+        // }
     }
     /**
      * Handle the Attendance "created" event.
